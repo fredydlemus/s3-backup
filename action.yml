@@ -1,0 +1,23 @@
+name: 'Backup to AWS S3'
+author: 'fredydlemus'
+description: 'Backup a repository to S3 using OIDC provider'
+inputs:
+  target-bucket:
+    description: 'The S3 bucket name'
+    required: true
+  bucket-region:
+    description: 'The region of the S3 bucket'
+    required: true
+  role-arn:
+    description: 'The ARN of the IAM role to assume'
+    required: true
+  oidc-audience:
+    description: The audience value for the OIDC token'
+    required: false
+    default: 'sts.amazonaws.com'
+runs:
+  using: 'node16'
+  main: 'main.js'
+branding:
+  icon: 'upload-cloud'
+  color: 'blue'

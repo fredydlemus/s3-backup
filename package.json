@@ -1,0 +1,12 @@
+{
+  "name": "s3-backup-action",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "fredydlemus",
+  "license": "MIT",
+  "description": "An GH Action to backup files to S3 using OIDC provider"
+}
