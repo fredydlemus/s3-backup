@@ -5,6 +5,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fredydlemus/s3-backup.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fredydlemus/s3-backup/issues"
+  },
+  "homepage": "https://github.com/fredydlemus/s3-backup#readme",
   "keywords": [],
   "author": "fredydlemus",
   "license": "MIT",
