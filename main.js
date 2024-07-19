@@ -68,7 +68,7 @@ async function createBackupTarGz() {
   console.log('Listing files in the workspace directory:');
     await exec.exec("ls -la", [], { cwd: process.env.GITHUB_WORKSPACE });
 
-  await exec.exec(`tar -czf ${archivePath} *`, [], {
+  await exec.exec(`tar -czf ${archivePath} .`, [], {
     cwd: process.env.GITHUB_WORKSPACE,
   });
 
