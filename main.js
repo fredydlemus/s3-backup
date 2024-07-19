@@ -19,9 +19,12 @@ async function run() {
     core.exportVariable("AWS_SECRET_ACCESS_KEY", secretAccessKey);
     core.exportVariable("AWS_SESSION_TOKEN", sessionToken);
 
+    await createBackupTarGz();
+
     const s3Uri = `s3://${bucket}/`;
 
-    await createBackupTarGz();
+    await exec.exec(`aws s3 sync . ${s3Uri} --recursive --exclude "*" --include "*.tar.gz"`);
+
   } catch (error) {
     core.setFailed(error.message);
   }
@@ -73,6 +76,4 @@ async function createBackupTarGz() {
   });
 
   await exec.exec(`mv ${archivePath} ${process.env.GITHUB_WORKSPACE}/`);
-
-  await exec.exec("ls -la", [], { cwd: process.env.GITHUB_WORKSPACE });
 }
