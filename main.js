@@ -64,6 +64,10 @@ async function createBackupTarGz() {
   const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
 
   const archivePath = path.join(backupDir, `${repoName}_${timestamp}.tar.gz`);
+
+  console.log('Listing files in the workspace directory:');
+    await exec.exec("ls -la", [], { cwd: process.env.GITHUB_WORKSPACE });
+
   await exec.exec(`tar -czf ${archivePath} *`, [], {
     cwd: process.env.GITHUB_WORKSPACE,
   });
