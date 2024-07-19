@@ -23,7 +23,7 @@ async function run() {
 
     const s3Uri = `s3://${bucket}/`;
 
-    await exec.exec(`aws s3 sync . ${s3Uri} --recursive --exclude "*" --include "*.tar.gz"`);
+    await exec.exec(`aws s3 sync . ${s3Uri} --exclude "*" --include "*.tar.gz"`);
 
   } catch (error) {
     core.setFailed(error.message);
