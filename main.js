@@ -18,7 +18,9 @@ async function run() {
     await syncToS3(inputs.targetBucket, archivePath);
   } catch (error) {
     core.setFailed(`Action failed: ${error.message}`);
-  }finally{}
+  }finally{
+    await cleanup();
+  }
 }
 
 /**
