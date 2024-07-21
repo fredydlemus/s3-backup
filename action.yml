@@ -21,7 +21,7 @@ inputs:
     default: 'backup'
 runs:
   using: 'node20'
-  main: 'main.js'
+  main: 'dist/index.js'
 branding:
   icon: 'upload-cloud'
   color: 'blue'
