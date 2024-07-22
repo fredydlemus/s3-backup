@@ -9,7 +9,6 @@ const {
   setupAwsCredentials,
   createBackupArchive,
   syncToS3,
-  cleanup,
   run,
 } = require("./main");
 
@@ -98,18 +97,37 @@ describe("S3 Backup Action", () => {
   });
 
   describe("createBackupArchive", () => {
-    it('should create a backup archive with correct name', async () =>{
-        const mockDate = new Date('2023-01-01T00:00:00Z');
-        jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
+    it("should create a backup archive with correct name", async () => {
+      const mockDate = new Date("2023-01-01T00:00:00Z");
+      jest.spyOn(global, "Date").mockImplementation(() => mockDate);
 
-        github.context = {repo: {repo: 'test-repo'}};
-        jest.spyOn(fs, 'existsSync').mockReturnValue(false);
-        path.join.mockImplementation((...args) => args.join('/'));
+      github.context = { repo: { repo: "test-repo" } };
+      jest.spyOn(fs, "existsSync").mockReturnValue(false);
+      path.join.mockImplementation((...args) => args.join("/"));
 
-        const result = await createBackupArchive('backup');
+      const result = await createBackupArchive("backup");
 
-        expect(result).toBe('tmp/backup/backup_test-repo_20230101T000000000Z.tar.gz');
-        expect(exec.exec).toHaveBeenCalledWith('tar', ['-czf', result, '.'], expect.any(Object));
-    })
+      expect(result).toBe(
+        "tmp/backup/backup_test-repo_20230101T000000000Z.tar.gz"
+      );
+      expect(exec.exec).toHaveBeenCalledWith(
+        "tar",
+        ["-czf", result, "."],
+        expect.any(Object)
+      );
+    });
+  });
+
+  describe("syncToS3", () => {
+    it("should sync the backup archive to S3 bucket", async () => {
+      await syncToS3("my-bucket", "path/to/archive.tar.gz");
+
+      expect(exec.exec).toHaveBeenCalledWith("aws", [
+        "s3",
+        "cp",
+        "path/to/archive.tar.gz",
+        "s3://my-bucket/",
+      ]);
+    });
   });
 });
