@@ -25,3 +25,8 @@ runs:
 branding:
   icon: 'upload-cloud'
   color: 'blue'
+tags:
+  - backup
+  - s3
+  - aws
+  - oidc
