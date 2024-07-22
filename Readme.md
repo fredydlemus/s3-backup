@@ -22,6 +22,7 @@ To use this action in your workflow, add the following step:
     role-arn: 'arn:aws:iam::your-account-id:role/your-role-name'
     oidc-audience: 'sts.amazonaws.com'
     backup-prefix: 'backup'
+```
 
 ## Inputs
 
