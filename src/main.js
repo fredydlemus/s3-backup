@@ -18,7 +18,7 @@ async function run() {
     await syncToS3(inputs.targetBucket, archivePath);
   } catch (error) {
     core.setFailed(`Action failed: ${error.message}`);
-  }finally{
+  } finally {
     await cleanup();
   }
 }
@@ -82,7 +82,10 @@ async function setupAwsCredentials(inputs) {
   core.setSecret(creds.Credentials.SessionToken);
 
   core.exportVariable("AWS_ACCESS_KEY_ID", creds.Credentials.AccessKeyId);
-  core.exportVariable("AWS_SECRET_ACCESS_KEY", creds.Credentials.SecretAccessKey);
+  core.exportVariable(
+    "AWS_SECRET_ACCESS_KEY",
+    creds.Credentials.SecretAccessKey
+  );
   core.exportVariable("AWS_SESSION_TOKEN", creds.Credentials.SessionToken);
 }
 
@@ -91,11 +94,11 @@ async function setupAwsCredentials(inputs) {
  * @param {string} prefix Prefix for the archive file name
  * @returns {string} Archive file path
  */
-async function createBackupArchive(prefix){
+async function createBackupArchive(prefix) {
   const repoName = github.context.repo.repo;
 
-  if(!fs.existsSync(TEMP_DIR)){
-    fs.mkdirSync(TEMP_DIR, {recursive: true});
+  if (!fs.existsSync(TEMP_DIR)) {
+    fs.mkdirSync(TEMP_DIR, { recursive: true });
   }
 
   const timestamp = new Date().toISOString().replace(/[-:.]/g, "");
@@ -104,7 +107,9 @@ async function createBackupArchive(prefix){
 
   core.info("Creating backup archive");
 
-  await exec.exec('tar', ['-czf', archivePath, '.'], {cwd: process.env.GITHUB_WORKSPACE});
+  await exec.exec("tar", ["-czf", archivePath, "."], {
+    cwd: process.env.GITHUB_WORKSPACE,
+  });
 
   return archivePath;
 }
@@ -114,19 +119,30 @@ async function createBackupArchive(prefix){
  * @param {string} bucket S3 bucket name
  * @param {string} archivePath Path to the archive file
  */
-async function syncToS3(bucket, archivePath){
+async function syncToS3(bucket, archivePath) {
   const s3Uri = `s3://${bucket}/`;
 
   core.info(`Syncing backup to S3 bucket ${s3Uri}`);
-  await exec.exec('aws', ['s3', 'cp', archivePath, s3Uri]);
+  await exec.exec("aws", ["s3", "cp", archivePath, s3Uri]);
 }
 
 /**
  * Cleanup temporary files
  */
-async function cleanup(){
+async function cleanup() {
   core.info("Cleaning up temporary files...");
-  fs.rmSync(TEMP_DIR, {recursive: true, force: true});
+  fs.rmSync(TEMP_DIR, { recursive: true, force: true });
 }
 
-run();
+module.exports = {
+  run,
+  getAndValidateInputs,
+  setupAwsCredentials,
+  createBackupArchive,
+  syncToS3,
+  cleanup,
+};
+
+if (require.main === module) {
+  run();
+}
